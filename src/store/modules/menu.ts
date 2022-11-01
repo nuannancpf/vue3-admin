@@ -3,19 +3,29 @@ import { RouteRecordRaw } from 'vue-router'
 
 import piniaPersistConfig from "../config/piniaPersist"
 interface routerType {
-      routerData?: any
+      routerData?: any[];
+      collapse: boolean
 }
-const menuRouterStore = defineStore("menuRouter", {
+export const menuRouterStore = defineStore("menuRouter", {
       state: (): routerType => ({
-            routerData: []
+            routerData: [],
+            collapse: false
       }),
       actions: {
             setRouter(router: RouteRecordRaw[]) {
                   console.log(router, '这是？？？？');
                   this.routerData = router.find(res => res.path === "/")?.children || []
-                  console.log( this.routerData );
-                  
+                  console.log(this.routerData);
+
                   // window.localStorage.setItem("ROUTER_INFO", this.routerData)
+            },
+            /**
+             * 设置菜单栏是否折叠
+             */
+            toggleCollapse() {
+                  console.log('设置菜单栏是否折叠');
+                  
+                  this.collapse = !this.collapse;
             }
       },
       persist: piniaPersistConfig("menuRouterStore")
@@ -23,4 +33,4 @@ const menuRouterStore = defineStore("menuRouter", {
 
 
 
-export default menuRouterStore;
+// export default menuRouterStore;

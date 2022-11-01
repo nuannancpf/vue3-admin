@@ -7,7 +7,7 @@
                                     <el-icon>
                                           <component :is="iconFn(onlyOneChild?.meta?.icon as string)"></component>
                                     </el-icon>
-                                    <span>{{ resolvePath(onlyOneChild?.path)}}</span>
+                                    <span>{{ onlyOneChild?.meta.title}}</span>
                               </template>
                         </el-menu-item>
                   </AppLink>
@@ -18,10 +18,10 @@
                               <el-icon>
                                     <component :is="iconFn(item.meta?.icon as string)"></component>
                               </el-icon>
-                              <span>{{ item.path }}</span>
+                              <span>{{ item.meta.title }}</span>
                         </template>
                         <template v-for="sub in item.children" :key="sub.path">
-                              <Subitem :item="sub" :base-path="resolvePath(sub.path)" />
+                              <Subitem :item="sub" :base-path="resolvePath(sub.meta.title)" />
                         </template>
 
                   </el-sub-menu>
@@ -67,8 +67,8 @@ const resolvePath = routePath => {
       if (isExternal(props.basePath)) {
             return props.basePath
       }
-      console.log(props.basePath, '======>props.basePath')
-      console.log(routePath, '======>routePath')
+      // console.log(props.basePath, '======>props.basePath')
+      // console.log(routePath, '======>routePath')
       // console.log(path.resolve(props.basePath, routePath))
       // return routePath
       return path.resolve(props.basePath, routePath)

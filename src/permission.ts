@@ -3,7 +3,7 @@ import type { RouteRecordRaw } from 'vue-router';
 import router from './routers/index';
 import NProgress from "nprogress";
 import 'nprogress/nprogress.css';
-import useUserStore from "./store/modules/usre";
+import {useUserStore} from "./store/modules/usre";
 import usePermissionStore from "./store/modules/permission";
 import type { toRouteType } from "./routers/types";
 
@@ -21,12 +21,15 @@ router.beforeEach(async (to, from, next) => {
       // 设置标题
       const userStore = useUserStore()
       const hasToken = userStore.token
+      console.log(hasToken, '这是');
+      
       if (hasToken) {
             if (to.path === "/login") {
                   next({ path: '/' })// 如果已登录，请重定向到主页}
             } else {
                   try {
                         const PermissionStore = usePermissionStore()
+                        console.log(to.path, '这是什么');
                         // 路由添加进去了没有及时更新 需要重新进去一次拦截
                         if (!PermissionStore.routes.length) {
                               // 获取权限列表进行接口访问 因为这里页面要切换权限
@@ -45,7 +48,7 @@ router.beforeEach(async (to, from, next) => {
 
             }
       } else {
-            console.log(to.path);
+            console.log(to.path, '这是什么');
             if (whiteList.indexOf(to.path) !== -1) {
                   next()
             } else {

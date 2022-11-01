@@ -1,7 +1,7 @@
 import axios, { AxiosInstance, AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios';
 import { ElMessage, ElMessageBox } from 'element-plus';
 import router from "../routers/index";
-import useUserStore from '../store/modules/usre';
+import {useUserStore} from '../store/modules/usre';
 import { ResultEnum } from './enums/httpEnum'
 import { checkStatus } from './helper/checkStatus'
 import { ResultData } from './interface/index'

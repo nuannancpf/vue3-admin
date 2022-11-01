@@ -1,6 +1,8 @@
 import { defineStore } from "pinia";
 import { userState } from "../interface/index"
 import piniaPersistConfig from "../config/piniaPersist"
+import cookies from "@/utils/cookies"
+import { TOKEN, AVATAR } from "@/config/constant"
 // import { routes } from "../../routers/router"
 // import {setLocal} from '../config/local'
 /** token过期时间：6小时 */
@@ -10,11 +12,11 @@ import piniaPersistConfig from "../config/piniaPersist"
 // const
 // import menuRouterStore from './menu'
 import { getInfo } from '../../api/user'
-const useUserStore = defineStore("user", {
+export const useUserStore = defineStore("user", {
       // state: 返回对象的函数
       state: (): userState => ({
             // token
-            token: "",
+            token: cookies.get(TOKEN) || "",
             // userInfo
             userInfo: {
                   // token: '',
@@ -29,30 +31,10 @@ const useUserStore = defineStore("user", {
       }),
       getters: {},
       actions: {
-            // setToken
-            setToken(token: string) {
-                  console.log();
-
+            setToken(token: string = "") {
+                  console.log(token);
+                  token ? cookies.set( TOKEN, token ) : cookies.remove( TOKEN )
                   this.token = token;
-                  // if (token) {
-                  //       this.token = token;
-                  //       // setLocal(TOKEN_CODE, token, DURATION)
-                  //       this.userInfo = {
-                  //             // ...data,
-                  //             // logo_square: url("../../assets/eagle.webp"),
-                  //             logo_info: {
-                  //                   name: '小潘潘',
-                  //                   age: 18
-                  //             },
-                  //             token: token
-                  //       }
-
-                  // } else {
-                  //       this.token = token
-                  //       this.userInfo = {}
-                  // }
-                  // const menuRouter = menuRouterStore()
-                  // menuRouter.setRouter(routes)
             },
             async GET_USER_INFO() {
                   try {
@@ -88,4 +70,4 @@ const useUserStore = defineStore("user", {
       },
 });
 
-export default useUserStore;
+// export default useUserStore;

@@ -1,6 +1,6 @@
 
 import router from "./router"
-import useUserStore from '../store/modules/usre'
+import {useUserStore} from '../store/modules/usre'
 // import nprogress from 'nprogress'
 // import 'nprogress/nprogress.css'
 

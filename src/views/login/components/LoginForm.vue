@@ -36,7 +36,7 @@ import { ElMessage, ElMessageBox } from 'element-plus';
 import { useRouter } from 'vue-router'
 import { getLogin } from '../api/index';
 // 状态管理依赖
-import useUserStore from '../../../store/modules/usre';
+import {useUserStore} from '@/store/modules/usre';
 // import { user } from '../../../../stores/index'
 const router = useRouter()
 const UserStore = useUserStore()
@@ -75,16 +75,12 @@ const login = async (formEl: FormInstance | undefined) => {
                 username: loginForm.username,
                 password: loginForm.password
             }
-            // const requestLoginForm = {
-            //     username: loginForm.username,
-            //     password: md5(loginForm.password)
-            // };
 
-            const res = await getLogin({ params });
-            console.log(res);
-            
+            const res = await getLogin({params});
+            console.log(res, 'res ========== >');
+            let token = res?.token || ''
             // * 存储 token
-            UserStore.setToken(res!.token);
+            UserStore.setToken(token);
             // // * 登录成功之后清除上个账号的 menulist 和 tabs 数据
             // menuStore.setMenuList([]);
             // tabStore.closeMultipleTab();

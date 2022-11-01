@@ -6,9 +6,10 @@ import router from './routers';
 import "./permission";
 // 状态管理
 // import { createPinia } from 'pinia';
-import pinia from './store/index'
+// import pinia from './store/index'
 // import {setupStore} from './store'
-
+// 引入pinia配置
+import { setupStore } from '@/store';
 // element plus
 import ElementPlus from "element-plus";
 // element icons
@@ -25,7 +26,8 @@ Object.keys(Icons).forEach(item => {
       app.component(item, Icons[item as keyof typeof Icons]);
 });
 // setupStore(app)
-app.use(pinia)
-app.use(router)
-app.use(ElementPlus)
-app.mount('#app')
+setupStore(app);
+app
+      .use(router)
+      .use(ElementPlus)
+      .mount('#app')

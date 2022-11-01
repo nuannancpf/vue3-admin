@@ -1,5 +1,8 @@
 import request from "@/request/index"
-
+export function getLogin (data?: object) {
+      console.log(data);
+      return {token: "token"}
+}
 export function getInfo(data?: object) {
       // return request.get('/getUserInfo', data)
       return {
