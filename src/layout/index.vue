@@ -12,6 +12,8 @@
                               <!-- 网站tabs标签页 -->
                               <!-- <AppTabs /> -->
                         </div>
+                        <!-- 网页内容区 -->
+                        <AppPage></AppPage>
                   </main>
             </div>
       </div>
@@ -20,6 +22,7 @@
 import './index.scss';
 import Menu from "./components/Menu/index.vue"
 import AppNav from './components/Navbar/index.vue'
+import AppPage from './components/AppPage/index.vue'
 import zhCn from "element-plus/es/locale/lang/zh-cn";
 import { menuRouterStore } from '@/store/modules/menu';
 const menuStore = menuRouterStore();
