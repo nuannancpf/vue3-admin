@@ -443,5 +443,325 @@ console.log(p1.__proto__ === p2.__proto__)
 
       /**问题：
             *1，函数执行完后，函数内部声明的局部变量是否还存在？
+                  // 一般不存在，存在于闭包中的变量才可能存在
             *2，在函数外部能直接访问函数内部的局部变量吗？
+                  // 不能，但我们可以通过闭包让外部操作它
        */
+      // eg:
+            function fn1(){
+                  var a = 2
+                  function fn2(){
+                        a++
+                        console.log(a)
+                  }
+                  function fn3(){
+                        a--
+                        console.log(a)
+                  }
+                  return fn3
+            }
+            var f = new fn1()
+            f()
+            f()
+// 四，闭包的生命周期
+      <!--
+      1, 产生：在嵌套内部函数定义执行完毕时就产生了（不是在调用）
+      2, 死亡：在嵌套的内部函数成为垃圾对象时
+      -->
+      <!--
+      eg:
+            function fn1(){
+                  // 此时闭包就已经产生了（函数提升，内部函数对象已经创建了）
+                  var a = 2
+                  function fn2(){
+                        a++
+                        console.log(a)
+                  }
+                  return fn2
+            }
+            var f = new fn1()
+            f()
+            f()
+            f = null // 闭包的死亡 （包含闭包的函数对象成为垃圾对象）
+      -->
+<!--
+五，闭包的应用_自定义JS模块
+
+      闭包的应用2: 定义JS模块
+            *具有特定功能的js 文件  // /vue3-Vite-admin/learningImg/index.html ====> /vue3-Vite-admin/learningImg/myModule.js
+            *将所有的数据和功能都封装在一个函数内部（私有的）
+            *只向外暴露一个包信n个方法的对象或函数
+            *模块的使用者，只需要通过模块暴露的对象调用方法来实现对应的功能
+-->
+
+<!--
+六，闭包的缺点及解决
+      1.缺点：
+            *函数执行完后，函数内的局部变量没有释放，占用内存空间会变长
+            *容易造成内存泄露
+      2.解决：
+            *能不用闭包就不用
+            *及时释放
+      
+      eg: 
+            function fn () {
+                  var arr = new Array[10000]
+                  function fn2(){
+                        console.log(arr.length)
+                  } 
+                  return fn2
+            }
+            var f = fn()
+            f()
+            f = null  // 让内部函数成为垃圾对象 ----》回收闭包
+
+
+ 内存溢出与内存泄露
+      1，内存溢出
+            *一种程序运行出现的错误
+            *当程序运行需要的内存超过了剩余内存时，就会抛出内存溢出的错误
+            eg:
+            var obj = {}
+            for(var i=0; i<1000;i++){
+                  obj[i] = new Array[10000]
+                  console.log('----------')
+            }
+      2，内存泄露
+            *占用的内存没有及时释放
+            *内存泄露积累多了就容易导致内存溢出
+            *常见的内存泄露：
+                        *意外的全局变量
+                        *没有及时清理的计时器或回调函数
+                        *闭包
+            //eg :
+            //*意外的全局变量
+                  function fn () {
+                        a =2
+                        console.log(a)
+                  }
+                  fn()
+            //*没有及时清理的计时器或回调函数
+                 var intervalId = setInterval(function(){ // 启动循环定时器后不清理
+                        console.log('setInterval =======>')
+                  },1000)
+                  clearInterval(intervalId) // 清理定时器
+
+             // *闭包
+                  function fn1(){
+                        var a =3
+                        function fn2(){
+                              console.log(a++)
+                        }
+                        return fn2
+                  }
+                  var f =fn1()
+                  f()
+ -->
+
+<!--  闭包面试题
+      // 代码面试题1
+            var name = 'the window'
+            var object = {
+                  name: 'my object',
+                  getNameFunc: function(){
+                        return function(){
+                              return this.name
+                        }
+                  }
+            }
+            alert(object.getNameFunc()())
+
+            var name2 = 'the window'
+            var object2 = {
+                  name2: 'my object',
+                  getNameFunc: function(){
+                        var that = this
+                        return function(){
+                              return that.name2
+                        }
+                  }
+            }
+            alert(object2.getNameFunc()())
+
+
+      // 代码面试题2 
+            function fun (n,o){
+                  console.log(o)
+                  return {
+                        fun: function(m){
+                              return fun(m,n)
+                        }
+                  }
+            }
+            var a = fun(0); a.fun(1);a.fun(2);a.fun(3); // undefined, 0 , 0, 0
+            var b = fun(0).fun(1).fun(2).fun(3); // undefined, 0 , 1, 2
+            var c = fun(0).fun(1); c.fun(2);c.fun(3); // undefined, 0 , 1, 1
+-->
+
+
+
+<!--
+  对象创建模式：
+            01，object 构造函数模式
+                  方式一：object 构造函数模式
+                        套路：先创建空object对象，再动态添加属性/方法
+                        适用场景：起始时不确定对象内部数据
+                        问题：语句太多
+                  /** 一个人 name:"tom",age:12
+                        var p = new Object()
+                        p,name = "tom",
+                        p.age = 12,
+                        p.setName = function (name){
+                              this.name = name
+                        }
+                  */
+            02, 对象字面量
+                  方式二：对象字面量模式
+                        套路：使用{}创建对象，同时指定属性/方法
+                        适用场景：起始时对象内部数据是确定的
+                        问题：如果创建多个对象，有重复代码
+
+                  /** 
+                        var p = {
+                              name:'tom',
+                              age: 12,
+                              setName: function (name){
+                                    this.name = name
+                              }
+                        }
+                        //测试
+                        console.log(p.name,p.age)
+                        p.setName('jack')
+                        console.log(p.name,p.age)
+                   */
+
+            03，工厂模式
+                  方式三：工厂模式
+                        套路：通过工厂函数动态创建对象并返回
+                        适用场景：需要创建多个对象
+                        问题：对象没有一个具体类型，都是Object类型
+                  
+                  /**
+                        function createPerson(name,age){
+                              var obj = {
+                                    name,
+                                    age,
+                                    setName: function(name){
+                                          this.name = name
+                                    }
+                              }
+                              return obj
+                        }
+
+                        //创建两个人
+                        var p1 = createPerson('tom', 24)
+                        var p2 = createPerson('king', 24)
+                   */
+            方式四：自定义构造函数模式
+                  套路：自定义构造函数，通过new创建对象
+                  适用场景：需要创建多个类型确定的对象
+                  问题：每个对象都有相同的数据，浪费内存
+                  /**
+                        function Person(name,age) {
+                              this.name = name
+                              this.age = age
+                              thos.setName = function(name){
+                                     this.name = name
+                              }
+                        }
+                   */
+            方式五：构造函数+原型的组合模式
+                  套路：自定义构造函数，属性在函数中初始化，方法添加在原型上
+                  适用场景：需要创建多个类型确定的对象
+                  /**
+                        function Person(name,age) {
+                              this.name = name
+                              this.age = age
+                        }
+                        Person.prototype.setName = function(name){
+                                     this.name = name
+                        }
+                        var p1 = new Person('tom',24)
+                        var p2 = new Person('jack',34)
+                   */
+-->
+
+<!--
+      继承模式
+            方式1:原型链的继承
+            
+                  1.套路：
+                        1，定义父类型构造函数
+                        2，给父类型的原型添加方法
+                        3，定义子类型构造函数
+                        4，创建父类型的对象赋值给子类型的原型
+                        5，将子类型原型的构造属性设置为子类型
+                        6，给子类型原型添加方法
+                        7，创建子类型的对象：可以调用父类型的方法
+                  2，关键
+                        1，子类型的原型为父类型的一个实例对象
+            
+            /**
+                  // 父类型
+                  function Supper(){
+                        this.supProp = "Supper property"
+                  }
+                  Supper.prototype.showSupperProp = function(){
+                        console.log(this.supProp)
+                  }
+                  // 子类型
+                  function Sub() {
+                        this.subProp = "Sub property"
+                  }
+                  //子类型的原型为父类型的一个实例对象
+                  Sub.prototype = new Supper()
+                  //让子类型的原型的constructor指向子类型
+                  Sub.prototype.constructor = Sub
+                  Sub.prototype.showSubProp = function(){
+                        console.log(this.subProp)
+                  }
+
+                  var sub = new Sub()
+                  sub.showSupperProp
+
+                  图解：/vue3-Vite-admin/learningImg/原型链继承.png
+             */
+
+            方式2: 借用构造函数继承（假的）
+                  1，套路：
+                        1，定义父类型构造函数
+                        2，定义子类型构造函数
+                        3，在子类型构造函数中调用父类型构造函数
+                  2，关键：
+                        1，在子类型构造函数中通用supper()调用父类型构造函数
+                  function Person(name,age){
+                        this.name = name
+                        this.age = age
+                  }
+                  Person.prototype.setName = function(name){
+                        this.name = name
+                  }
+                  function Student(name,age,price){
+                        Person.call(this, name, age)  // 相当于 this.Person(name,age)
+                        this.price = price
+                  }
+                   Student.prototype = ne Person() // 为了能看到父类型的方法
+                   Student.prototype.constructor = Student  // 修正constructor属性
+                  Student.prototype.setPrice = function(price){
+                        this.price = price
+                  }
+                  var s = new Student('tom',20,14000)
+                  s.setName('king')
+                  s.setPrice(100)
+                  console.log(s.name,s.age,s.price)
+-->
+
+<!--
+      进程与线程
+
+
+            线程:是进程内的一个独立执行单元
+                 是 程序执行的一个完整流程
+                 是cpu 最小的调度单元
+
+-->
