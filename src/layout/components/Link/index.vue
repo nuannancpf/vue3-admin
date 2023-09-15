@@ -13,7 +13,7 @@ const props = defineProps({
             required: true,
       }
 })
-console.log(props.to);
+// console.log(props.to);
 
 const isExternalPath = (pathUrl: string) => {
       return /^(https?:|mailto:|tel:)/.test(pathUrl)

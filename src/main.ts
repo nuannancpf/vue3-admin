@@ -19,8 +19,10 @@ import "element-plus/dist/index.css";
 import 'element-plus/theme-chalk/dark/css-vars.css';
 import "./styles/index.scss";
 
+// import layoutStore from './layout'
 
 const app = createApp(App);
+// app.use(layoutStore)
 // 注册element Icons组件
 Object.keys(Icons).forEach(item => {
       app.component(item, Icons[item as keyof typeof Icons]);

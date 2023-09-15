@@ -10,8 +10,7 @@ import { TOKEN, AVATAR } from "@/config/constant"
 // const DURATION = 60
 // const TOKEN_CODE = 'cpf_access_token'
 // const
-// import menuRouterStore from './menu'
-import { getInfo } from '../../api/user'
+import { getInfo } from '@/api/user'
 export const useUserStore = defineStore("user", {
       // state: 返回对象的函数
       state: (): userState => ({
@@ -44,7 +43,7 @@ export const useUserStore = defineStore("user", {
                               this.userInfo = {
                                     // token: id || '',
                                     uid: id || '',
-                                    avatar: avatar || "https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif",
+                                    avatar:  "https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif",
                                     name: name || '灰是小灰灰的灰',
                                     phone: phone || '15988888888',
                                     email: email || '454539387@qq.com',
@@ -70,4 +69,4 @@ export const useUserStore = defineStore("user", {
       },
 });
 
-// export default useUserStore;
+export default useUserStore;

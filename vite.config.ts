@@ -15,8 +15,8 @@ export default defineConfig({
     extensions: ['.js', '.json', '.ts', '.vue']
   },
   server: {
-    // host: '0.0.0.0',
-    // port: 2022,
+    host: '0.0.0.0',
+    port: 2022,
     // https: false,
     open: true,
     // proxy: {

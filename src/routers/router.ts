@@ -25,9 +25,11 @@ export const routes: Array<RouteRecordRaw & extendRoute> = [
       {
             path: "/login",
             name: "login",
-            hidden: true,
             component: () => import('@/views/login/index.vue'),
-            meta: { title: '登录', }
+            meta: {
+                  title: '登录', hidden: true,
+                  hiddenTab: true
+            }
       },
 ]
 export const asyncRoutes: Array<RouteRecordRaw> = [
@@ -36,31 +38,67 @@ export const asyncRoutes: Array<RouteRecordRaw> = [
             name: 'Dashboard',
             component: Layout,
             redirect: "/dashboard",
-            alwaysShow: true,
+            // alwaysShow: true,
             meta: {
                   icon: 'Menu',
                   title: 'Dashboard'
             },
             children: [
                   {
-                        path: "dashboard",
+                        path: "/dashboard",
                         name: "Dashboard",
-                        component: () => import("../views/Dashboard/index.vue"),
+                        component: () => import("@/views/Dashboard/index.vue"),
                         meta: {
                               keepAlive: false,
                               requiresAuth: false,
+                              hidden: true,
+                              hiddenTab: true,
                               title: "Dashboard",
                               icon: 'Menu',
                         }
                   },
             ]
       },
-      Nested
-      // {
-      //       // 找不到路由重定向到404页面
-      //       path: "/:pathMatch(.*)",
-      //       redirect: { name: "404" }
-      // }
+      {
+            path: "/root",
+            name: "root",
+            component: Layout,
+            redirect: '/root/home',
+            meta: {
+                  title: "Root",
+                  icon: "HouseIcon",
+            },
+            children: [
+                  {
+                        path: "/root/home",
+                        name: "Home",
+                        // alwaysShow: true,
+                        component: () => import("@/views/Root/main/index.vue"),
+                        meta: {
+                              title: "主控台",
+                              keepAlive: false,
+                              requiresAuth: false,
+                              affix: true,
+                              cacheable: true,
+                              // hidden: true,
+                              // hiddenTab: true
+                        },
+                  },
+                  {
+                        path: "/root/work-place",
+                        name: "WorkPlace",
+                        component: () => import("@/views/Root/WorkPlace/index.vue"),
+                        meta: {
+                              title: "工作台",
+                              keepAlive: false,
+                              requiresAuth: false,
+                              // hidden: true,
+                              // hiddenTab: true
+                        },
+                  },
+            ],
+      },
+      // Nested
 ]
 // 创建路由
 const router = createRouter({

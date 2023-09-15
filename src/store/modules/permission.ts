@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia';
 import { RouteRecordRaw } from 'vue-router';
-import { routes, asyncRoutes } from '../../routers/router'
+import router, { routes, asyncRoutes } from '../../routers/router'
 import type { AppRouteRecordRaw } from '../../routers/types'
 /**
  * 使用meta.role来确定当前用户是否有权限
@@ -46,17 +46,19 @@ const usePermissionStore = defineStore("permission", {
             // 路由生成
             generateRoutes(roles: string[]): Promise<AppRouteRecordRaw[]> {
                   return new Promise(resolve => {
-                        let accessedRoutes
-                        if (roles.includes('admin')) {
-                              accessedRoutes = asyncRoutes || []
-                        } else {
-                              accessedRoutes = filterAsyncRoutes(asyncRoutes, roles)
-                        }
-                        this.addRoutes = accessedRoutes
-                        this.routes = routes.concat(accessedRoutes)
-                        console.log( this.routes , '菜单路由');
+                        // let accessedRoutes
+                        // if (roles.includes('admin')) {
+                        //       accessedRoutes = asyncRoutes || []
+                        // } else {
+                        //       accessedRoutes = filterAsyncRoutes(asyncRoutes, roles)
+                        // }
+                        // this.addRoutes = accessedRoutes
+                        // console.log(accessedRoutes, '--------accessedRoutes');
+
+                        this.routes = routes.concat(asyncRoutes)
+                        // console.log( this.routes , '菜单路由');
                         
-                        resolve(accessedRoutes)
+                        resolve(asyncRoutes)
                   })
             }
       }

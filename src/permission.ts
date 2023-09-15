@@ -3,7 +3,8 @@ import type { RouteRecordRaw } from 'vue-router';
 import router from './routers/index';
 import NProgress from "nprogress";
 import 'nprogress/nprogress.css';
-import {useUserStore} from "./store/modules/usre";
+import { useUserStore } from "./store/modules/usre";
+import { menuRouterStore } from './store/modules/menu'
 import usePermissionStore from "./store/modules/permission";
 import type { toRouteType } from "./routers/types";
 
@@ -21,22 +22,49 @@ router.beforeEach(async (to, from, next) => {
       // 设置标题
       const userStore = useUserStore()
       const hasToken = userStore.token
-      console.log(hasToken, '这是');
-      
+
       if (hasToken) {
             if (to.path === "/login") {
                   next({ path: '/' })// 如果已登录，请重定向到主页}
             } else {
                   try {
                         const PermissionStore = usePermissionStore()
-                        console.log(to.path, '这是什么');
                         // 路由添加进去了没有及时更新 需要重新进去一次拦截
                         if (!PermissionStore.routes.length) {
                               // 获取权限列表进行接口访问 因为这里页面要切换权限
                               const accessRoutes = await PermissionStore.generateRoutes(userStore.userInfo.roles)
-                              console.log(accessRoutes, '获取权限列表进行接口访问 因为这里页面要切换权限');
+                              // console.log(accessRoutes, '获取权限列表进行接口访问 因为这里页面要切换权限');
+                              // console.log()  , '动态添加访问路由表');
 
                               accessRoutes.forEach(access => router.addRoute(access as unknown as RouteRecordRaw)) // 动态添加访问路由表
+                              accessRoutes.forEach(access => {
+                                    console.log(access, '=============> to', to);
+                                    const routeName: any = access.name
+                                    if (!router.hasRoute(routeName)) {
+                                          // const eachRoute = {
+                                          //       path: access.path,
+                                          //       redirect: access.redirect,
+                                          //       name: access.name,
+                                          //       // component: item.component === 'Layout' ? Layout : obtainModules(`./views/${componentPath}.vue`) ,
+                                          //       component: !access.children ? Layout : obtainModules(`./views/${componentPath}.vue`),
+                                          //       meta: access.meta
+                                          // }
+                                          router.addRoute(access)
+                                    }
+                                    // router.addRoute(access)
+
+                              })
+                              const menuStore = menuRouterStore()
+                              const { tabsOption } = menuStore
+                              const flag = tabsOption.findIndex((tab: { route: string }) => tab.route === to.path) > -1
+                              console.log(flag);
+                              console.log(to, '这是');
+                              if (!flag) {
+
+
+                                    menuStore.start({ route: to.path, title: to.meta.title, name: to.name })
+                              }
+                              menuStore.set_tab(to.path)
                               next({ ...to, replace: true })// // 这里相当于push到一个页面 不在进入路由拦截
                         } else {
                               next() // // 如果不传参数就会重新执行路由拦截，重新进到这里
